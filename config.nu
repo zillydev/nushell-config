@@ -16,4 +16,6 @@ use std "path add"
 if ($nu.os-info.name) == "macos" {
 	path add "/opt/homebrew/bin"
 	path add "/usr/local/bin"
+	path add "~/google-cloud-sdk/bin"
+	$env.JAVA_HOME = (/usr/libexec/java_home -v 21)
 }
