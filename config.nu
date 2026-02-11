@@ -9,7 +9,7 @@ def --env y [...args] {
 	rm -fp $tmp
 }
 
-$env.config.buffer_editor = "cursor"
+$env.config.buffer_editor = "zed"
 
 use std "path add"
 
@@ -18,4 +18,19 @@ if ($nu.os-info.name) == "macos" {
 	path add "/usr/local/bin"
 	path add "~/google-cloud-sdk/bin"
 	$env.JAVA_HOME = (/usr/libexec/java_home -v 21)
+	$env.ANDROID_HOME = "~/Library/Android/sdk"
+  path add ($env.ANDROID_HOME | path join "cmdline-tools/latest/bin")
+  path add ($env.ANDROID_HOME | path join "platform-tools")
+}
+
+if not (which fnm | is-empty) {
+  ^fnm env --json | from json | load-env
+
+  $env.PATH = $env.PATH | prepend ($env.FNM_MULTISHELL_PATH | path join (if $nu.os-info.name == 'windows' {''} else {'bin'}))
+  $env.config.hooks.env_change.PWD = (
+    $env.config.hooks.env_change.PWD? | append {
+        condition: {|| ['.nvmrc' '.node-version', 'package.json'] | any {|el| $el | path exists}}
+        code: {|| ^fnm use --silent-if-unchanged}
+    }
+  )
 }
