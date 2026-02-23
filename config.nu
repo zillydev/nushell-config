@@ -13,6 +13,8 @@ $env.config.buffer_editor = "zed"
 
 use std "path add"
 
+use "./git-completions.nu" *
+
 if ($nu.os-info.name) == "macos" {
 	path add "/opt/homebrew/bin"
 	path add "/usr/local/bin"
