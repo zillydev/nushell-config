@@ -32,7 +32,11 @@ if not (which fnm | is-empty) {
   $env.config.hooks.env_change.PWD = (
     $env.config.hooks.env_change.PWD? | append {
         condition: {|| ['.nvmrc' '.node-version', 'package.json'] | any {|el| $el | path exists}}
-        code: {|| ^fnm use --silent-if-unchanged}
+        code: {|| ^fnm use --install-if-missing}
     }
   )
 }
+
+$env.CARAPACE_BRIDGES = 'zsh,fish,bash,inshellisense'
+mkdir $"($nu.cache-dir)"
+carapace _carapace nushell | save --force $"($nu.cache-dir)/carapace.nu"
